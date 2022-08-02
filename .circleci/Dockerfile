@@ -19,12 +19,6 @@ RUN python -m venv /py && \
     then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
     rm -rf /tmp && \
-    adduser \
-    --disabled-password \
-    --no-create-home \
-    django-user && \
     apk add --update openssh-client git
 
 ENV PATH="/py/bin:$PATH"
-
-USER django-user
