@@ -2,27 +2,26 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-jobs:
-  build:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+executors:
+  python:
     docker:
-      - image: steen0/custom-eats:0.0.1
-        auth:
-          username: steen0
-          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
+      -image: python:3.9-alpine3.13
 
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+commands:
+  setup_ssh:
+    description: Setup local ssh-agent
     steps:
-      - checkout
       - run:
-          name: 'Say hello'
-          command: 'echo Hello, World!'
+          name: Setup local ssh-agent
+          command: |
+            mkdir -p ~/.ssh
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-workflows:
-  test-workflow:
-    jobs:
-      - build
+            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU$
+            ' >> ~/.ssh/known_hosts
+
+            (umask 077; touch ~/.ssh/id_rsa)
+            chmod 0600 ~/.ssh/id_rsa
+            (cat \<<EOF > ~/.ssh/id_rsa
+            $CHECKOUT_KEY
+            EOF
+            )
