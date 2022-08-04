@@ -13,6 +13,7 @@ services:
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
     environment:
+      # setting env variables to connect to db
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
@@ -24,11 +25,12 @@ services:
     image: postgres:13-alpine
     volumes:
       - dev-db-data:/var/lib/postgresql/data
+    # creating the db
     environment:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
 
-
+ 
 volumes:
   dev-db-data:
