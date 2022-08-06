@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class ModelTests(TestCase):
@@ -43,3 +44,18 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_upgrade_user_successful(self):
+        user = get_user_model().objects.create_user(
+            email='testUpgrade@example.com',
+            )
+        user = get_user_model().objects.upgrade_user(
+            email='testUpgrade@example.com',
+            )
+        self.assertTrue(user.is_superuser)
+
+    def test_upgrade_user_does_not_exist(self):
+        with self.assertRaises(ObjectDoesNotExist):
+            get_user_model().objects.upgrade_user(
+                    email='testUpgrade@example.com',
+                )

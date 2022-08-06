@@ -8,10 +8,12 @@ from psycopg2 import OperationalError as Psycopg2OpError
 from django.core.management import call_command
 from django.db.utils import OperationalError
 from django.test import SimpleTestCase
+from django.core.management.base import CommandError
 
 
+# Django commands that don't require interaction with models
 @patch('core.management.commands.wait_for_db.Command.check')
-class CommandTests(SimpleTestCase):
+class DjangoSetUpCommandTests(SimpleTestCase):
     """Test commands."""
 
     def test_wait_for_db_ready(self, patched_check):
@@ -32,3 +34,12 @@ class CommandTests(SimpleTestCase):
 
         self.assertEqual(patched_check.call_count, 6)
         patched_check.assert_called_with(databases=['default'])
+
+
+class DjangoModificationCommandTests(SimpleTestCase):
+
+    def test_upgrade_user_command_failure(self):
+        with self.assertRaises(CommandError):
+            call_command('upgrade_user testNotExist@example.com')
+
+    # def test_upgrade_user_command_success(self):

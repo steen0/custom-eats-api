@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class UserManager(BaseUserManager):
 
@@ -19,6 +19,18 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password):
         user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+
+        return user
+
+    def upgrade_user(self, email):
+        user = User.objects.get(email=email)
+        if not user:
+            raise ObjectDoesNotExist
+        if not user.password:
+            user.password = 'admin'
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
