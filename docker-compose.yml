@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
 
@@ -25,7 +25,7 @@ services:
       - db
 
   db:
-    image: postgres:13-alpine
+    image: postgres:13
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:
