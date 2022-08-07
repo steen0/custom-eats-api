@@ -1,5 +1,6 @@
-FROM python:3.9-alpine3.13
+FROM python:alpine3.16
 LABEL maintainer="steen0"
+
 
 ENV PYTHONUNBUFFERED 1
 
@@ -10,7 +11,7 @@ WORKDIR /app
 EXPOSE 8000
 
 ARG DEV=false
-# The venv is useful in case the docker image python dependencies conflict 
+# The venv is useful in case the docker image python dependencies conflict
 # with our project dependencies
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \

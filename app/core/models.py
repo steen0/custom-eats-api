@@ -6,6 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.core.exceptions import ObjectDoesNotExist
 
+# ------------------ DEFINE MANAGERS ------------------
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
@@ -38,7 +39,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-# Create your models here.
+# ------------------ DEFINE MODELS ------------------
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
