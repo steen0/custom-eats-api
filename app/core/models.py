@@ -6,6 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.core.exceptions import ObjectDoesNotExist
 
+
 # ------------------ DEFINE MANAGERS ------------------
 class UserManager(BaseUserManager):
 
