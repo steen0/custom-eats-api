@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             user_email = options['user_email'][0]
-            user = User.objects.get(email = user_email)
+            user = User.objects.get(email=user_email)
         except User.DoesNotExist:
             raise CommandError('\nUser %s does not exist' % user_email)
 
