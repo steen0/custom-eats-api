@@ -129,4 +129,12 @@ dmypy.json
 .pyre/
 
 # VS Code Settings
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Ignore CircleCI for now
+.circleci/*
