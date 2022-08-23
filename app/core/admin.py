@@ -42,4 +42,40 @@ class UserAdmin(BaseUserAdmin):
             )
         })]
 
+
+class OrderAdmin(admin.ModelAdmin):
+    """Define the admin page for Orders."""
+    ordering = ['id']
+    list_display = ['id', 'order_type', 'created_date', 'status', 'total_amount']
+    fieldsets = [
+        (None, {
+                'fields': (
+                    'user',
+                    'order_type',
+                    'quantity',
+                    'total_amount',
+                    'status',
+                )
+            }
+        ),
+        (
+            _('Important Dates'),
+            {
+                'fields': ('created_date', 'last_modified',)
+            }
+        )]
+    readonly_fields = ['last_modified', 'created_date']
+    add_fieldsets = [
+        (None, {
+            'classes': ('wide',),
+            'fields': (
+                'user',
+                'order_type',
+                'quantity',
+                'total_amount',
+            )
+        })]
+
+
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Order, OrderAdmin)

@@ -4,7 +4,10 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+
+from django.utils.translation import gettext as _
 
 
 # ------------------ DEFINE MANAGERS ------------------
@@ -50,3 +53,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class Order(models.Model):
+
+    class OrderType(models.TextChoices):
+        ONE_TIME = 'one_time', _('One-Time')
+        RECURRING_WEEKLY = 'recurring_weekly', _('Recurring Weekly')
+        RECURRING_MONTHLY = 'recurring_monthly', _('Recurring Monthly')
+        RECURRING_YEARLY = 'recurring_yearly', _('Recurring Yearly')
+
+    class OrderStatus(models.TextChoices):
+        PROCESSING = 'processing', _('Processing')
+        COMPLETED = 'completed', _('Completed')
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    order_type = models.CharField(
+        choices=OrderType.choices,
+        blank=False,
+        max_length=40,
+    )
+    quantity = models.IntegerField()
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    last_modified = models.DateTimeField(auto_now=True)
+    status = models.CharField(
+        choices=OrderStatus.choices,
+        default=OrderStatus.PROCESSING,
+        max_length=10,
+    )
